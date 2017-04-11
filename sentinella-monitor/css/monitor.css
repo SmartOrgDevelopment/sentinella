@@ -1,0 +1,27 @@
+.monitor-header {
+    text-align: center;
+}
+
+.monitor-box {
+    border: 1px solid;
+    border-radius: 4px;
+    width: 46%;
+    padding: 10px;
+    margin: 10px 2%;
+    float: left;
+}
+
+.build-stable {
+    background-color: #a3efac;
+    border-color: #5dc663;
+}
+
+.build-broken {
+    background-color: #ef837a;
+    border-color: #c6382a;
+}
+
+.build-recover {
+    background-color: #efebae;
+    border-color: #c6c658;
+}

@@ -1,0 +1,31 @@
+import RPi.GPIO as GPIO
+import time
+
+buzzer = 20
+
+def buzz(status):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(buzzer, GPIO.OUT)
+    GPIO.output(buzzer, GPIO.HIGH)
+    if status == 2:
+        loop()
+
+def on():
+    GPIO.output(buzzer, GPIO.LOW)
+
+def off():
+    GPIO.output(buzzer, GPIO.HIGH)
+
+def beep(x):
+    on()
+    time.sleep(x)
+    off()
+    time.sleep(x)
+
+def loop():
+    for i in range(0, 3):
+        beep(0.5)
+
+def stop_buzz():
+    GPIO.output(buzzer, GPIO.HIGH)
+    GPIO.cleanup()

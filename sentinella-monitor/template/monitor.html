@@ -1,0 +1,18 @@
+<!--<button ng-click="test()">Listen to Pubnub</button>-->
+<h2 class="monitor-header">
+  SmartOrg Sentinella
+</h2>
+
+<div>
+  <div ng-repeat="report in serverReports track by $index">
+    <div class="monitor-box"
+        ng-class="{'build-stable': report.status === 'stable',
+            'build-broken': report.status.indexOf('broken') > -1,
+            'build-recover': report.status === 'back to normal'}">
+      <h3>Project: {{report.project}}</h3>
+      <p>Status: {{report.status}}</p>
+      <p>Build: {{report.build}}</p>
+      <p>Time: {{report.updated}}</p>
+    </div>
+  </div>
+</div>

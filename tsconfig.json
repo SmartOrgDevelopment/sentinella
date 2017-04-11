@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es3",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": false,
+    "typeRoots": [
+      "./node_modules/@types",
+    ]
+  },
+  "compileOnSave": true,
+  "exclude": [
+    "./app/bower_components",
+    "./node_modules"
+  ]
+}
