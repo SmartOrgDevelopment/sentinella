@@ -4,7 +4,7 @@
 'use strict';
 angular.module('sentinella', [
     "ngRoute",
-    "sentinellaMonitor"
+    "smartorg.stnl.monitor"
 ]).config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/monitor', {
             controller: 'MonitorCtrl',

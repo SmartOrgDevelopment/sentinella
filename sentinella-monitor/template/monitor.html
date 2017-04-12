@@ -1,18 +1,54 @@
-<!--<button ng-click="test()">Listen to Pubnub</button>-->
 <h2 class="monitor-header">
   SmartOrg Sentinella
 </h2>
 
-<div>
-  <div ng-repeat="report in serverReports track by $index">
-    <div class="monitor-box"
-        ng-class="{'build-stable': report.status === 'stable',
-            'build-broken': report.status.indexOf('broken') > -1,
-            'build-recover': report.status === 'back to normal'}">
-      <h3>Project: {{report.project}}</h3>
-      <p>Status: {{report.status}}</p>
-      <p>Build: {{report.build}}</p>
-      <p>Time: {{report.updated}}</p>
+<div class="monitor-control">
+  <button class="btn btn-primary"
+      ng-if="!stnl.monitoring"
+      ng-click="funcs.startMonitor()">Start Monitoring
+  </button>
+  <button class="btn btn-warning"
+      ng-if="stnl.monitoring"
+      ng-click="funcs.stopMonitor()">Stop Monitoring
+  </button>
+  <button class="btn btn-info"
+      ng-if="stnl.monitoring"
+      ng-click="funcs.getStatus()">Refresh
+  </button>
+</div>
+
+<div ng-if="!stnl.monitoring" class="monitor-main-msg">
+  <h3>
+    Sentinella monitor is standing by.
+  </h3>
+</div>
+
+<div ng-if="stnl.monitoring && stnl.status == 'passed'"
+    class="monitor-main-msg">
+  <h3>
+    Relax, all tests passed.
+  </h3>
+</div>
+
+<div ng-if="stnl.monitoring && stnl.status == 'failed'">
+  <div>
+    Last Update: {{stnl.lastUpdate.toString()}}
+  </div>
+
+  <div ng-repeat="report in stnl.failingBranches track by $index">
+    <div class="monitor-box build-broken">
+      <h3>Project: {{report.repo}}</h3>
+      <p>Branch: {{report.commit.branch}}</p>
+      <p>Status: Failed</p>
+      <p>Author: {{report.commit.author_name}}</p>
+      <p>Time: {{report.commit.committed_at}}</p>
     </div>
   </div>
+</div>
+
+<div ng-if="stnl.monitoring && stnl.status == 'error'"
+    class="monitor-main-msg">
+  <h3>
+    Something's wrong with me, please fix me.
+  </h3>
 </div>

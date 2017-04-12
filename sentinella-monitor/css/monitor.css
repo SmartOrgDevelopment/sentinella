@@ -2,6 +2,14 @@
     text-align: center;
 }
 
+.monitor-control {
+    text-align: center;
+}
+
+.monitor-main-msg {
+    text-align: center;
+}
+
 .monitor-box {
     border: 1px solid;
     border-radius: 4px;

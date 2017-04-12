@@ -4,48 +4,119 @@
 
 module smartorg.stnl.monitor {
     export interface IPlumScope {
-        getDataFrom: Function;
+        stnl: {
+            monitoring: boolean;
+            lastUpdate: Date;
+            status: string;
+            failingBranches: Array<any>
+        };
+
+        funcs: any;
+
         test: Function;
 
         serverReports: Array<any>;
     }
 }
 
-'use strict';
+"use strict";
 
 angular.module(
-    'sentinellaMonitor', []
-).controller('MonitorCtrl', [
-    '$scope', ($scope: smartorg.stnl.monitor.IPlumScope) => {
+    "smartorg.stnl.monitor", []
+).controller("MonitorCtrl", [
+    "$scope", "$http", "$timeout",
+    ($scope: smartorg.stnl.monitor.IPlumScope,
+     $http, $timeout) => {
 
-        $scope.getDataFrom = () => {
+        const SERVICE_HOST = "http://127.0.0.1:5000";
+        const PASSED = "passed";
+        const FAILED = "failed";
+        const WAIT_TIME = 30000;  // 30 sec
 
+        $scope.stnl = {
+            monitoring: false,
+            lastUpdate: undefined,
+            status: "passed",
+            failingBranches: []
         };
 
-        $scope.test = () => {
-            $scope.serverReports = [{
-                "project": "AstroService",
-                "status": "stable",
-                "updated": "2016-04-28T23:12:04Z",
-                "build": 130
-            }, {
-                "project": "Sequoia",
-                "status": "stable",
-                "updated": "2016-07-25T17:36:05Z",
-                "build": 140
-            }, {
-                "project": "Sequoia-Dev",
-                "status": "stable",
-                "updated": "2016-08-03T23:55:04Z",
-                "build": 537
-            }, {
-                "project": "Sequoia-Dev-Testem",
-                "status": "stable",
-                "updated": "2016-08-03T23:48:28Z",
-                "build": 492
-            }];
-        };
+        $scope.funcs = {
+            loading: false,
 
-        $scope.getDataFrom();
+            startMonitor: () => {
+                $scope.stnl.monitoring = true;
+                $scope.funcs.monitor();
+            },
+
+            stopMonitor: () => {
+                $scope.stnl.monitoring = false;
+            },
+
+            getStatus: () => {
+                $http({
+                    method: "GET",
+                    url: SERVICE_HOST + "/status"
+                }).then((response) => {
+                    let rs = response.data;
+
+                    $scope.stnl.status = rs;
+
+                    if (rs == PASSED) {
+                        // Do nothing
+                    } else if (rs == FAILED) {
+                        $scope.funcs.getReport();
+                    } else {
+                        // Do nothing
+                    }
+                }, (err) => {
+                    console.error(err);
+                })
+            },
+
+            getReport: () => {
+                $http({
+                    method: "GET",
+                    url: SERVICE_HOST + "/report"
+                }).then((response) => {
+                    let rs = response.data;
+
+                    $scope.stnl.failingBranches =
+                        $scope.funcs.getFailingBranch(rs);
+
+                    $scope.stnl.lastUpdate = new Date();
+                }, (err) => {
+                    console.error(err);
+                })
+            },
+
+            getFailingBranch: (jsonReport: any) => {
+                let failingBranches = [];
+
+                let repos = Object.keys(jsonReport);
+                for (let r of repos) {
+                    jsonReport[r].forEach(branchReport => {
+                        if (branchReport.branch.state == FAILED) {
+                            failingBranches.push({
+                                "repo": r,
+                                "branch": branchReport.branch,
+                                "commit": branchReport.commit
+                            });
+                        }
+                    });
+                }
+
+                return failingBranches;
+            },
+
+            monitor: () => {
+                $scope.funcs.getStatus();
+
+                $timeout(() => {
+                    if ($scope.stnl.monitoring) {
+                        $scope.funcs.monitor();
+                    }
+                }, WAIT_TIME);
+            }
+        };
     }
 ]);
