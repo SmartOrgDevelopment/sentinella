@@ -1,7 +1,7 @@
 import time
 
 from travis import travis_subscriber
-from led.led_control import turn_on_led, turn_off_leds
+from led.led_control import turn_on_led
 from buzz.buzz_control import buzz, stop_buzz
 
 LOOPS = 1

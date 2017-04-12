@@ -4,8 +4,8 @@ from flask import Flask
 
 app = Flask(__name__)
 
-__TRAVIS_OUTPUT_PASSED = "travis_output_passed.json"
-__TRAVIS_OUTPUT_FAILED = "travis_output_failed.json"
+__TRAVIS_OUTPUT_PASSED = "../pi-control/travis_output_passed.json"
+__TRAVIS_OUTPUT_FAILED = "../pi-control/travis_output_failed.json"
 
 PASSED = "passed"
 FAILED = "failed"
@@ -17,7 +17,7 @@ def info():
     return "This is the API of SmartOrg Sentinella"
 
 
-@app.route("/get-status", methods=["GET"])
+@app.route("/status", methods=["GET"])
 def get_status():
     if os.path.exists(__TRAVIS_OUTPUT_PASSED):
         return PASSED
@@ -27,7 +27,7 @@ def get_status():
         return ERROR
 
 
-@app.route("/get-report", methods=["GET"])
+@app.route("/report", methods=["GET"])
 def get_travis_report():
     if os.path.exists(__TRAVIS_OUTPUT_PASSED):
         with open(__TRAVIS_OUTPUT_PASSED) as data_file:

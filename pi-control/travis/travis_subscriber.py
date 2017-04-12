@@ -64,7 +64,6 @@ class TravisSub(object):
 
         return analyse_result
 
-
     def __init__(self):
         self.token, self.git_id, self.repos = read_config()
         self.travis_header = {
@@ -119,8 +118,12 @@ class TravisSub(object):
     def generate_report(self):
         if self.__get_travis_token():
             report = self.__get_all_project_status()
-            write_result(report)
-            return TravisSub.analyse_status(report)
+            analyse_result = TravisSub.analyse_status(report)
+            if analyse_result == PASSED:
+                write_result(report, PASSED)
+            else:
+                write_result(report, FAILED)
+            return analyse_result
         else:
             logging.error("Failed to load travis token")
             return None
