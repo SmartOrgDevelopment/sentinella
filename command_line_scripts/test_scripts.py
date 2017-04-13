@@ -1,4 +1,5 @@
 import requests
+
 token1 = ""
 
 uri = "https://api.travis-ci.com"
@@ -12,7 +13,8 @@ HEADERS1 = {
     'Content-Type': 'application/json'
 }
 
-r1 = requests.post(uri + "/auth/github", headers=HEADERS1,
+r1 = requests.post(uri + "/auth/github",
+                   headers=HEADERS1,
                    params=github_token)
 r1.json()
 

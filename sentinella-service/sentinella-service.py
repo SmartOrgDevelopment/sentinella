@@ -1,17 +1,10 @@
-import os
-
 from flask import Flask
 from flask_cors import CORS
 
+from travis.travis_reports import report_status, read_report
+
 app = Flask(__name__)
 cors = CORS(app)
-
-__TRAVIS_OUTPUT_PASSED = "../pi-control/travis_output_passed.json"
-__TRAVIS_OUTPUT_FAILED = "../pi-control/travis_output_failed.json"
-
-PASSED = "passed"
-FAILED = "failed"
-ERROR = "error"
 
 
 @app.route("/")
@@ -21,24 +14,12 @@ def info():
 
 @app.route("/status", methods=["GET"])
 def get_status():
-    if os.path.exists(__TRAVIS_OUTPUT_PASSED):
-        return PASSED
-    elif os.path.exists(__TRAVIS_OUTPUT_FAILED):
-        return FAILED
-    else:
-        return ERROR
+    return report_status()
 
 
 @app.route("/report", methods=["GET"])
 def get_travis_report():
-    if os.path.exists(__TRAVIS_OUTPUT_PASSED):
-        with open(__TRAVIS_OUTPUT_PASSED) as data_file:
-            return data_file.read()
-    elif os.path.exists(__TRAVIS_OUTPUT_FAILED):
-        with open(__TRAVIS_OUTPUT_FAILED) as data_file:
-            return data_file.read()
-    else:
-        return ERROR
+    return read_report()
 
 
 if __name__ == "__main__":

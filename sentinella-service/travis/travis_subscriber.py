@@ -1,40 +1,11 @@
-import os
-import json
 import requests
 import logging
 
+from config.config import read_travis_config
+from config.config import PASSED, FAILED
+from travis_reports import write_report
+
 logging.basicConfig(filename="travis.log")
-
-__CONFIG_FILE = "config.json"
-__TRAVIS_OUTPUT_PASSED = "travis_output_passed.json"
-__TRAVIS_OUTPUT_FAILED = "travis_output_failed.json"
-
-PASSED = "passed"
-FAILED = "failed"
-
-
-def read_config():
-    with open(__CONFIG_FILE) as data_file:
-        data = json.load(data_file)
-    return data["token"], data["git_id"], data["repos"]
-
-
-def write_result(data, status=PASSED):
-    if status == PASSED:
-        output_file = __TRAVIS_OUTPUT_PASSED
-        try:
-            os.remove(__TRAVIS_OUTPUT_FAILED)
-        except OSError:
-            pass
-    else:
-        output_file = __TRAVIS_OUTPUT_FAILED
-        try:
-            os.remove(__TRAVIS_OUTPUT_PASSED)
-        except OSError:
-            pass
-
-    with open(output_file, "w") as outfile:
-        json.dump(data, outfile)
 
 
 class TravisSub(object):
@@ -48,7 +19,7 @@ class TravisSub(object):
     }
 
     @staticmethod
-    def analyse_status(rs):
+    def __analyse_status(rs):
         analyse_result = PASSED
 
         for repo, branches in rs.items():
@@ -65,7 +36,7 @@ class TravisSub(object):
         return analyse_result
 
     def __init__(self):
-        self.token, self.git_id, self.repos = read_config()
+        self.token, self.git_id, self.repos = read_travis_config()
         self.travis_header = {
             "User-Agent": "MyClient/1.0.0",
             "Accept": "application/vnd.travis-ci.2+json",
@@ -95,7 +66,6 @@ class TravisSub(object):
         p = self.__make_branch_request_uri(repo, branch)
 
         try:
-            print TravisSub.__TRAVIS_URI + p
             rs = requests.get(TravisSub.__TRAVIS_URI + p,
                               headers=self.travis_header)
             return rs.json()
@@ -118,11 +88,11 @@ class TravisSub(object):
     def generate_report(self):
         if self.__get_travis_token():
             report = self.__get_all_project_status()
-            analyse_result = TravisSub.analyse_status(report)
+            analyse_result = TravisSub.__analyse_status(report)
             if analyse_result == PASSED:
-                write_result(report, PASSED)
+                write_report(report, PASSED)
             else:
-                write_result(report, FAILED)
+                write_report(report, FAILED)
             return analyse_result
         else:
             logging.error("Failed to load travis token")
