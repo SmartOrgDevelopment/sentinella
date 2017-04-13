@@ -63,10 +63,10 @@ class TravisSub(object):
         return "/repos/{}/{}/branches/{}".format(self.git_id, repo, branch)
 
     def __get_branch_status(self, repo, branch):
-        p = self.__make_branch_request_uri(repo, branch)
+        route = self.__make_branch_request_uri(repo, branch)
 
         try:
-            rs = requests.get(TravisSub.__TRAVIS_URI + p,
+            rs = requests.get(TravisSub.__TRAVIS_URI + route,
                               headers=self.travis_header)
             return rs.json()
         except Exception as ex:

@@ -9,11 +9,13 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
         var PASSED = "passed";
         var FAILED = "failed";
         var WAIT_TIME = 30000; // 30 sec
+        var BUZZ_ON = "buzz on";
         $scope.stnl = {
             monitoring: false,
             lastUpdate: undefined,
             status: "passed",
-            failingBranches: []
+            failingBranches: [],
+            buzzState: true
         };
         $scope.funcs = {
             loading: false,
@@ -84,6 +86,29 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
                         $scope.funcs.monitor();
                     }
                 }, WAIT_TIME);
+            },
+            buzzState: function () {
+                $http({
+                    method: "PUT",
+                    url: SERVICE_HOST + "/buzz"
+                }).then(function (response) {
+                    var rs = response.data;
+                    $scope.stnl.buzzState = rs === BUZZ_ON;
+                }, function (err) {
+                    console.error(err);
+                });
+            },
+            buzzSwitch: function () {
+                var state = !$scope.stnl.buzzState ? "on" : "off";
+                $http({
+                    method: "PUT",
+                    url: SERVICE_HOST + "/buzz/" + state
+                }).then(function (response) {
+                    var rs = response.data;
+                    $scope.stnl.buzzState = rs === BUZZ_ON;
+                }, function (err) {
+                    console.error(err);
+                });
             }
         };
     }

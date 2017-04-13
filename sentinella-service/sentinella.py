@@ -44,8 +44,8 @@ def start_subscribe():
     end_time = datetime.strptime(end_time_str, "%I:%M%p")
 
     while subscribe:
-        t = travis_subscriber.TravisSub()
-        status = t.generate_report()
+        subs = travis_subscriber.TravisSub()
+        status = subs.generate_report()
 
         if status == travis_subscriber.PASSED:
             turn_on_led(LED_GREEN)

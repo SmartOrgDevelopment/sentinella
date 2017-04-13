@@ -8,7 +8,8 @@ module smartorg.stnl.monitor {
             monitoring: boolean;
             lastUpdate: Date;
             status: string;
-            failingBranches: Array<any>
+            failingBranches: Array<any>;
+            buzzState: boolean;
         };
 
         funcs: any;
@@ -33,11 +34,14 @@ angular.module(
         const FAILED = "failed";
         const WAIT_TIME = 30000;  // 30 sec
 
+        const BUZZ_ON = "buzz on";
+
         $scope.stnl = {
             monitoring: false,
             lastUpdate: undefined,
             status: "passed",
-            failingBranches: []
+            failingBranches: [],
+            buzzState: true
         };
 
         $scope.funcs = {
@@ -116,6 +120,34 @@ angular.module(
                         $scope.funcs.monitor();
                     }
                 }, WAIT_TIME);
+            },
+
+            buzzState: () => {
+                $http({
+                    method: "PUT",
+                    url: SERVICE_HOST + "/buzz"
+                }).then((response) => {
+                    let rs = response.data;
+
+                    $scope.stnl.buzzState = rs === BUZZ_ON;
+                }, (err) => {
+                    console.error(err);
+                })
+            },
+
+            buzzSwitch: () => {
+                let state = !$scope.stnl.buzzState ? "on" : "off";
+
+                $http({
+                    method: "PUT",
+                    url: SERVICE_HOST + "/buzz/" + state
+                }).then((response) => {
+                    let rs = response.data;
+
+                    $scope.stnl.buzzState = rs === BUZZ_ON;
+                }, (err) => {
+                    console.error(err);
+                })
             }
         };
     }
