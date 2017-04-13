@@ -3,8 +3,7 @@
  */
 "use strict";
 angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
-    "$scope", "$http", "$timeout",
-    function ($scope, $http, $timeout) {
+    "$scope", "$http", "$timeout", function ($scope, $http, $timeout) {
         var SERVICE_HOST = "http://127.0.0.1:5000";
         var PASSED = "passed";
         var FAILED = "failed";
@@ -87,9 +86,9 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
                     }
                 }, WAIT_TIME);
             },
-            buzzState: function () {
+            loadBuzzState: function () {
                 $http({
-                    method: "PUT",
+                    method: "GET",
                     url: SERVICE_HOST + "/buzz"
                 }).then(function (response) {
                     var rs = response.data;
@@ -111,5 +110,8 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
                 });
             }
         };
+        $timeout(function () {
+            $scope.funcs.loadBuzzState();
+        });
     }
 ]);

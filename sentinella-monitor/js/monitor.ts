@@ -25,9 +25,8 @@ module smartorg.stnl.monitor {
 angular.module(
     "smartorg.stnl.monitor", []
 ).controller("MonitorCtrl", [
-    "$scope", "$http", "$timeout",
-    ($scope: smartorg.stnl.monitor.IPlumScope,
-     $http, $timeout) => {
+    "$scope", "$http", "$timeout", ($scope: smartorg.stnl.monitor.IPlumScope,
+                                    $http, $timeout) => {
 
         const SERVICE_HOST = "http://127.0.0.1:5000";
         const PASSED = "passed";
@@ -122,9 +121,9 @@ angular.module(
                 }, WAIT_TIME);
             },
 
-            buzzState: () => {
+            loadBuzzState: () => {
                 $http({
-                    method: "PUT",
+                    method: "GET",
                     url: SERVICE_HOST + "/buzz"
                 }).then((response) => {
                     let rs = response.data;
@@ -150,5 +149,9 @@ angular.module(
                 })
             }
         };
+
+        $timeout(() => {
+            $scope.funcs.loadBuzzState();
+        });
     }
 ]);
