@@ -1,8 +1,10 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 __TRAVIS_OUTPUT_PASSED = "../pi-control/travis_output_passed.json"
 __TRAVIS_OUTPUT_FAILED = "../pi-control/travis_output_failed.json"
