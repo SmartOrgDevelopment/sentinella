@@ -28,7 +28,7 @@ def __buzz(buzz_type):
 def __get_sleep_time(start_time, end_time):
     time_now = datetime.now()
 
-    if start_time.time() < time_now and time_now.time() < end_time.time():
+    if start_time.time() < time_now.time() < end_time.time():
         return DEFAULT_SLEEP_SEC
     else:
         offline_time = (end_time - start_time).seconds

@@ -31,14 +31,13 @@
 </div>
 
 <div ng-if="stnl.monitoring && stnl.status == 'failed'">
-  <div>
+  <div class="monitor-control">
     Last Update: {{stnl.lastUpdate.toString()}}
   </div>
 
   <div ng-repeat="report in stnl.failingBranches track by $index">
     <div class="monitor-box build-broken">
-      <h3>Project: {{report.repo}}</h3>
-      <p>Branch: {{report.commit.branch}}</p>
+      <h3>Project: {{report.repo}} - {{report.commit.branch}}</h3>
       <p>Status: Failed</p>
       <p>Author: {{report.commit.author_name}}</p>
       <p>Time: {{report.commit.committed_at}}</p>
