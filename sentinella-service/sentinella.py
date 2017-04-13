@@ -17,6 +17,7 @@ ERROR_BUZZ = 1
 FAILED_BUZZ = 2
 
 DEFAULT_SLEEP_SEC = 60
+MIN_SLEEP_SEC = 30
 
 
 def __buzz(buzz_type):
@@ -32,6 +33,8 @@ def __get_sleep_time(start_time, end_time):
         return DEFAULT_SLEEP_SEC
     else:
         offline_time = (end_time - start_time).seconds
+        if offline_time < MIN_SLEEP_SEC:
+            offline_time = MIN_SLEEP_SEC
         return offline_time
 
 
@@ -39,11 +42,12 @@ def start_subscribe():
     global subscribe, buzz_on
     subscribe = True
 
-    buzz_on, start_time_str, end_time_str = read_sentinella_config()
-    start_time = datetime.strptime(start_time_str, "%I:%M%p")
-    end_time = datetime.strptime(end_time_str, "%I:%M%p")
-
     while subscribe:
+
+        buzz_on, start_time_str, end_time_str = read_sentinella_config()
+        start_time = datetime.strptime(start_time_str, "%I:%M%p")
+        end_time = datetime.strptime(end_time_str, "%I:%M%p")
+
         subs = travis_subscriber.TravisSub()
         status = subs.generate_report()
 
