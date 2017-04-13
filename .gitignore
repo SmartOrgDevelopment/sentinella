@@ -4,6 +4,7 @@ node_modules
 
 config.json
 
+*.pyc
 *.log
 
 travis_output*.json
