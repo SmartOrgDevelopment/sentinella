@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 
 from config.config import PASSED, FAILED
-from travis import travis_polling
+import travis_polling
 from pi_control.led.led_control import turn_on_led
 from pi_control.led.led_control import LED_GREEN, LED_RED, LED_YELLOW
 

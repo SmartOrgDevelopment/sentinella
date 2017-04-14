@@ -17,6 +17,13 @@ def read_travis_config():
     return data["token"], data["git_id"], data["repos"]
 
 
+def read_monitoring_repos():
+    with open(__CONFIG_FILE) as data_file:
+        data = json.load(data_file)["travis"]
+
+    return data["repos"]
+
+
 def read_sentinella_config():
     with open(__CONFIG_FILE) as data_file:
         data = json.load(data_file)["sentinella"]
