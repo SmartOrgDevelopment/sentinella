@@ -1,7 +1,8 @@
 import time
 from datetime import datetime
 
-from travis import travis_subscriber
+from config.config import PASSED, FAILED
+from travis import travis_polling
 from pi_control.led.led_control import turn_on_led
 from pi_control.led.led_control import LED_GREEN, LED_RED, LED_YELLOW
 
@@ -48,13 +49,13 @@ def start_subscribe():
         start_time = datetime.strptime(start_time_str, "%I:%M%p")
         end_time = datetime.strptime(end_time_str, "%I:%M%p")
 
-        subs = travis_subscriber.TravisSub()
+        subs = travis_polling.TravisSub()
         status = subs.generate_report()
 
-        if status == travis_subscriber.PASSED:
+        if status == PASSED:
             turn_on_led(LED_GREEN)
             __buzz(PASSED_BUZZ)
-        elif status == travis_subscriber.FAILED:
+        elif status == FAILED:
             turn_on_led(LED_RED)
             __buzz(FAILED_BUZZ)
         else:

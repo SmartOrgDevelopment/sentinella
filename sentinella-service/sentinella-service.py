@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 from travis.travis_reports import report_status, read_report
@@ -31,6 +31,12 @@ def set_buzz_switch(state):
 @app.route("/buzz", methods=["GET"])
 def get_buzz_st():
     return get_buzz_state()
+
+
+@app.route("/travis/notifications", method=["POST"])
+def travis_hook():
+    request.json()
+    pass
 
 
 if __name__ == "__main__":

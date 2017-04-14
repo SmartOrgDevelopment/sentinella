@@ -1,11 +1,14 @@
 import requests
 import logging
+from datetime import datetime
 
 from config.config import read_travis_config
 from config.config import PASSED, FAILED
 from travis_reports import write_report
 
-logging.basicConfig(filename="travis.log")
+logging.basicConfig(filename="travis.log", level=logging.ERROR)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class TravisSub(object):
@@ -56,7 +59,7 @@ class TravisSub(object):
                 rs.json()["access_token"])
             return True
         except Exception as ex:
-            logging.error(ex)
+            logger.error(ex)
             return False
 
     def __make_branch_request_uri(self, repo, branch):
@@ -70,7 +73,7 @@ class TravisSub(object):
                               headers=self.travis_header)
             return rs.json()
         except Exception as ex:
-            logging.error(ex)
+            logger.error(ex)
             return None
 
     def __get_repo_status(self, repo):
@@ -86,6 +89,9 @@ class TravisSub(object):
         return rs
 
     def generate_report(self):
+        logger.info("Fetch status at: {}".format(
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+
         if self.__get_travis_token():
             report = self.__get_all_project_status()
             analyse_result = TravisSub.__analyse_status(report)
@@ -95,5 +101,5 @@ class TravisSub(object):
                 write_report(report, FAILED)
             return analyse_result
         else:
-            logging.error("Failed to load travis token")
+            logger.error("Failed to load travis token")
             return None
