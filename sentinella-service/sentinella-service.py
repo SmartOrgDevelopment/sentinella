@@ -1,4 +1,5 @@
 import logging
+import json
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -40,18 +41,17 @@ def get_buzz_st():
     return get_buzz_state()
 
 
-@app.route("/travis/notifications", methods=["POST"])
+@app.route("/travis/notification", methods=["POST"])
 def travis_hook():
     try:
-        return travis_notice_ctrl.add_new_notice(request.json())
+        # Magic word payload.
+        str_data = request.form["payload"]
+        json_data = json.loads(str_data)
+        travis_notice_ctrl.add_new_notice(json_data)
+        return "200"
     except Exception as ex:
         logger.error(ex.message)
         return "503"
-
-
-@app.route("/hook/test", methods=["GET"])
-def hook_test():
-    return "Here we are."
 
 
 if __name__ == "__main__":

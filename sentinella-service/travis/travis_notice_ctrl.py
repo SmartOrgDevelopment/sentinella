@@ -7,10 +7,10 @@ import notice_file_handler
 from config.config import read_monitoring_repos, read_sentinella_config
 from config.config import PASSED, FAILED, ERROR
 
-from pi_control.led.led_control import turn_on_led
-from pi_control.led.led_control import LED_GREEN, LED_RED, LED_YELLOW
-
-from pi_control.buzz.buzz_control import buzz
+# from pi_control.led.led_control import turn_on_led
+# from pi_control.led.led_control import LED_GREEN, LED_RED, LED_YELLOW
+#
+# from pi_control.buzz.buzz_control import buzz
 
 PASSED_BUZZ = 0
 ERROR_BUZZ = 1
@@ -21,23 +21,24 @@ buzz_on = False
 
 def __buzz(buzz_type):
     global buzz_on
-    if buzz_on:
-        buzz(buzz_type)
+    # if buzz_on:
+    #     buzz(buzz_type)
 
 
 def __pi_control(analyse_result):
-    if analyse_result[FAILED] > 0:
-        turn_on_led(LED_RED)
-        __buzz(FAILED_BUZZ)
-
-    if analyse_result[ERROR] > 0:
-        turn_on_led(LED_YELLOW)
-        __buzz(ERROR_BUZZ)
-
-    if analyse_result[FAILED] == 0 and analyse_result[ERROR] == 0 \
-            and analyse_result[PASSED] > 0:
-        turn_on_led(LED_GREEN)
-        __buzz(PASSED_BUZZ)
+    # if analyse_result[FAILED] > 0:
+    #     turn_on_led(LED_RED)
+    #     __buzz(FAILED_BUZZ)
+    #
+    # if analyse_result[ERROR] > 0:
+    #     turn_on_led(LED_YELLOW)
+    #     __buzz(ERROR_BUZZ)
+    #
+    # if analyse_result[FAILED] == 0 and analyse_result[ERROR] == 0 \
+    #         and analyse_result[PASSED] > 0:
+    #     turn_on_led(LED_GREEN)
+    #     __buzz(PASSED_BUZZ)
+    pass
 
 
 def __is_working_time(start_time_str, end_time_str):
