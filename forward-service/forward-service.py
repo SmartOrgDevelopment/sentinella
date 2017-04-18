@@ -27,6 +27,7 @@ def info():
 @app.route("/notification", methods=["POST"])
 def travis_hook():
     try:
+        # Travis is sending data in this form.
         input_data = flask_request.form
         requests.post(
             "{}/travis/notification".format(TRAVIS_SERVER),

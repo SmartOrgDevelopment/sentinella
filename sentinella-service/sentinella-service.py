@@ -44,6 +44,7 @@ def get_buzz_st():
 @app.route("/travis/notification", methods=["POST"])
 def travis_hook():
     try:
+        # Travis is sending data in this form.
         # Magic word payload.
         str_data = request.form["payload"]
         json_data = json.loads(str_data)
