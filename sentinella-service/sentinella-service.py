@@ -4,7 +4,9 @@ import json
 from flask import Flask, request
 from flask_cors import CORS
 
-from travis import travis_notice_ctrl
+from travis_webhook import travis_notice_ctrl
+
+from travis_polling import travis_reports
 
 from config.config import buzz_switch, get_buzz_state
 
@@ -21,14 +23,16 @@ def info():
     return "This is the API of SmartOrg Sentinella"
 
 
-@app.route("/timestamp", methods=["GET"])
+@app.route("/status", methods=["GET"])
 def get_status():
-    return travis_notice_ctrl.get_timestamp()
+    # return travis_notice_ctrl.get_timestamp()
+    return travis_reports.report_status()
 
 
 @app.route("/report", methods=["GET"])
 def get_travis_report():
-    return travis_notice_ctrl.read_report()
+    # return travis_notice_ctrl.read_report()
+    return travis_reports.read_report()
 
 
 @app.route("/buzz/<state>", methods=["PUT"])

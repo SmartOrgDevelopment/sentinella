@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 
 from config.config import PASSED, FAILED
-import travis_polling
+from travis_polling.travis_polling import TravisSub
 from pi_control.led.led_control import turn_on_led
 from pi_control.led.led_control import LED_GREEN, LED_RED, LED_YELLOW
 
@@ -17,8 +17,8 @@ PASSED_BUZZ = 0
 ERROR_BUZZ = 1
 FAILED_BUZZ = 2
 
-DEFAULT_SLEEP_SEC = 60
-MIN_SLEEP_SEC = 30
+DEFAULT_SLEEP_SEC = 600  # 10 minutes
+MIN_SLEEP_SEC = 120  # 2 minutes
 
 
 def __buzz(buzz_type):
@@ -49,7 +49,7 @@ def start_subscribe():
         start_time = datetime.strptime(start_time_str, "%I:%M%p")
         end_time = datetime.strptime(end_time_str, "%I:%M%p")
 
-        subs = travis_polling.TravisSub()
+        subs = TravisSub()
         status = subs.generate_report()
 
         if status == PASSED:
