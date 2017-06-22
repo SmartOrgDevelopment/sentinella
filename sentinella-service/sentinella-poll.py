@@ -27,18 +27,6 @@ def __buzz(buzz_type):
         buzz(buzz_type)
 
 
-def __get_sleep_time(start_time, end_time):
-    time_now = datetime.now()
-
-    if start_time.time() < time_now.time() < end_time.time():
-        return DEFAULT_SLEEP_SEC
-    else:
-        offline_time = (end_time - start_time).seconds
-        if offline_time < MIN_SLEEP_SEC:
-            offline_time = MIN_SLEEP_SEC
-        return offline_time
-
-
 def start_subscribe():
     global subscribe, buzz_on
     subscribe = True
@@ -46,26 +34,30 @@ def start_subscribe():
     while subscribe:
 
         buzz_on, start_time_str, end_time_str = read_sentinella_config()
-        start_time = datetime.strptime(start_time_str, "%I:%M%p")
-        end_time = datetime.strptime(end_time_str, "%I:%M%p")
 
-        subs = TravisSub()
-        status = subs.generate_report()
+        start_time = datetime.strptime(start_time_str, "%I:%M%p").time()
+        end_time = datetime.strptime(end_time_str, "%I:%M%p").time()
+        time_now = datetime.now().time()
 
-        if status == PASSED:
-            turn_on_led(LED_GREEN)
-            __buzz(PASSED_BUZZ)
-        elif status == FAILED:
-            turn_on_led(LED_RED)
-            __buzz(FAILED_BUZZ)
-        else:
-            turn_on_led(LED_YELLOW)
-            __buzz(ERROR_BUZZ)
+        if start_time < time_now < end_time:
 
-        print "Last update time: {}".format(
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            subs = TravisSub()
+            status = subs.generate_report()
 
-        time.sleep(__get_sleep_time(start_time, end_time))
+            if status == PASSED:
+                turn_on_led(LED_GREEN)
+                __buzz(PASSED_BUZZ)
+            elif status == FAILED:
+                turn_on_led(LED_RED)
+                __buzz(FAILED_BUZZ)
+            else:
+                turn_on_led(LED_YELLOW)
+                __buzz(ERROR_BUZZ)
+
+            print "Last update time: {}".format(
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+        time.sleep(DEFAULT_SLEEP_SEC)
 
 
 def stop_subscribe():
