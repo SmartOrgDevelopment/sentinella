@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 
 from config.config import read_travis_config
-from config.config import PASSED, FAILED
+from config.config import PASSED, FAILED, ERROR
 from travis_reports import write_report
 
 logging.basicConfig(filename="travis.log", level=logging.ERROR)
@@ -30,6 +30,9 @@ class TravisSub(object):
                 branch = branch_report["branch"]
 
                 if branch["state"] == FAILED:
+                    analyse_result = FAILED
+                    break
+                elif branch["state"] == ERROR:
                     analyse_result = FAILED
                     break
 

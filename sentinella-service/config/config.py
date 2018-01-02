@@ -4,7 +4,7 @@ __CONFIG_FILE = "config.json"
 
 PASSED = "passed"
 FAILED = "failed"
-ERROR = "error"
+ERROR = "errored"
 
 BUZZ_ON = "buzz on"
 BUZZ_OFF = "buzz off"

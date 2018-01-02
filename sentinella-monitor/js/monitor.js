@@ -7,6 +7,7 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
         var SERVICE_HOST = "http://127.0.0.1:5000";
         var PASSED = "passed";
         var FAILED = "failed";
+        var ERROR = "errored";
         var WAIT_TIME = 30000; // 30 sec
         var BUZZ_ON = "buzz on";
         $scope.stnl = {
@@ -63,7 +64,8 @@ angular.module("smartorg.stnl.monitor", []).controller("MonitorCtrl", [
                 var repos = Object.keys(jsonReport);
                 var _loop_1 = function (r) {
                     jsonReport[r].forEach(function (branchReport) {
-                        if (branchReport.branch.state == FAILED) {
+                        if (branchReport.branch.state == FAILED ||
+                            branchReport.branch.state == ERROR) {
                             failingBranches.push({
                                 "repo": r,
                                 "branch": branchReport.branch,

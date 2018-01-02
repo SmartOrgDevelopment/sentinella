@@ -31,6 +31,8 @@ angular.module(
         const SERVICE_HOST = "http://127.0.0.1:5000";
         const PASSED = "passed";
         const FAILED = "failed";
+        const ERROR = "errored";
+
         const WAIT_TIME = 30000;  // 30 sec
 
         const BUZZ_ON = "buzz on";
@@ -98,7 +100,9 @@ angular.module(
                 let repos = Object.keys(jsonReport);
                 for (let r of repos) {
                     jsonReport[r].forEach(branchReport => {
-                        if (branchReport.branch.state == FAILED) {
+                        if (branchReport.branch.state == FAILED ||
+                            branchReport.branch.state == ERROR
+                        ) {
                             failingBranches.push({
                                 "repo": r,
                                 "branch": branchReport.branch,
