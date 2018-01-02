@@ -31,7 +31,7 @@ class TravisSub(object):
 
                 if branch["state"] == FAILED:
                     analyse_result = FAILED
-                break
+                    break
 
             if analyse_result == FAILED:
                 break
